@@ -1,0 +1,13 @@
+sensor1 = topleft
+sensor2 = topright
+sensor3 = bottomleft
+sensor4 = bottomright
+
+# if/else if logic: if you're close to hitting someone, MOVE. if not, continue following the person.
+
+if (distance < 1 foot for any)
+    (sensor(s) returning under 1 foot)
+        move in a vector away from those
+
+else if
+    defer to pixy data and follow person

@@ -15,7 +15,7 @@ boolean sensor1 = false;
 boolean sensor2 = false;
 boolean sensor3 = false;
 
-boolean sensor5 = false;
+boolean sensor5 = false; // this is a comment :)
 
 void setup() {
 pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output

@@ -14,7 +14,8 @@ int distance;
 boolean sensor1 = false;
 boolean sensor2 = false;
 boolean sensor3 = false;
-boolean sensor4 = false;
+
+boolean sensor5 = false;
 
 void setup() {
 pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output

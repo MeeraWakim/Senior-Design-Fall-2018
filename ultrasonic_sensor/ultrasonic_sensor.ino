@@ -14,13 +14,7 @@ int distance;
 boolean sensor1 = false;
 boolean sensor2 = false;
 boolean sensor3 = false;
-
-boolean sensor5 = false; // this is a comment :)
-//hello yes?
-//poop diddy scoop
-
-//hopefully this causes a merge conflict
-//scoop diddy woop
+boolean sensor4 = false;
 
 
 void setup() {
@@ -52,11 +46,11 @@ void loop() {
     // Reads the echoPin, returns the sound wave travel time in microseconds
     duration = pulseIn(echoPin, HIGH);
     
-    // Calculating the distance
+    // Calculating the distance in centimeters
     distance = duration*0.034/2;
     
     // Prints the distance on the Serial Monitor
-    Serial.print("Distance: ");
+    Serial.print("Distance (cm): ");
     Serial.println(distance);
   
     //saving distance/duration values

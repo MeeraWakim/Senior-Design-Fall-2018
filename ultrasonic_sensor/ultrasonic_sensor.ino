@@ -54,7 +54,8 @@ void loop() {
 
     // Prints the distance on the Serial Monitor
     //Serial.print("Distance (cm): ");
-    Serial.println(i);
+    int directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side"};
+    Serial.println(directionWords[i-1]);
     Serial.print(": ");
     Serial.println(distance);
 

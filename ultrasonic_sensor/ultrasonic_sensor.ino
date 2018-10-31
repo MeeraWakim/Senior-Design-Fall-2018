@@ -55,9 +55,11 @@ void loop() {
     // Prints the distance on the Serial Monitor
     //Serial.print("Distance (cm): ");
     int directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side"};
-    Serial.println(directionWords[i-1]);
+    /* Serial.println(directionWords[i-1]);
     Serial.print(": ");
-    Serial.println(distance);
+    Serial.println(distance); */
+    String directionOutput = directionWords[i-1] + ": " + String(distance);
+    Serial.print(directionOutput);
 
     //saving distance/duration values
     savedDistanceVals[i - 1] = distance;

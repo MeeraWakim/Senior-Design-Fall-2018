@@ -24,7 +24,7 @@ boolean sensor5 = false;
   const int myTrigPins[] = {trig1, trig2, trig3, trig4, trig5};
   const int myEchoPins[] = {echo1, echo2, echo3, echo4, echo5};
   int sensorStates[] = {sensor1, sensor2, sensor3, sensor4, sensor5};
-  int savedDistanceVals[] = {0,0};
+  int savedDistanceVals[] = {0,0,0,0,0};
 
 void setup() {
   for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++){
@@ -59,23 +59,45 @@ void loop() {
 
     // Prints the distance on the Serial Monitor
     //Serial.print("Distance (cm): ");
-    int directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side"};
-    /* Serial.println(directionWords[i-1]);
+    const char* directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side"};
+    Serial.print(directionWords[i]);
     Serial.print(": ");
-    Serial.println(distance); */
-    String directionOutput = directionWords[i-1] + ": " + String(distance);
-    Serial.print(directionOutput);
+    Serial.println(distance);
 
     //saving distance/duration values
     savedDistanceVals[i] = distance;
+
+    //change 1 val to real distance limit
+    if (savedDistanceVals[i] < 10) {
+      sensorStates[i] = true;
+    }
+
+    if (savedDistanceVals[i] > 10) {
+      sensorStates[i] = false;
+    }
+
   }
 
-  for (int i = 1; i <= 2; i++) {
-    //change 1 val to real distance limit
-    if (savedDistanceVals[i - 1] < 1) {
-      sensorStates[i - 1] = false;
+  for (int i = 0; i <= 4; i++) {
+    Serial.print(sensorStates[i]);
+    if (i == 4) {
+      Serial.println();
     }
   }
+  
+  int leftWall[] = {1, 0, 0, 0, 0};
+  int leftCorner1[] = {1, 1, 1, 0, 0};
+  int leftCorner2[] = {1, 1, 0, 0, 0};
+
+  int cases[] = {leftWall, leftCorner1, leftCorner2};
+  
+  for (int i = 0; i <= 2; i++) {
+    if (sensorStates == cases[i]) {
+      Serial.print(cases[i]);
+    }
+    Serial.println(leftWall[0]);
+  }
+
 
   //vector
 

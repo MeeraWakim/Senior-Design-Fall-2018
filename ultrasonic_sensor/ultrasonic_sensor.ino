@@ -85,22 +85,34 @@ void loop() {
     }
   }
   
-  int leftWall[] = {1, 0, 0, 0, 0};
-  int leftCorner1[] = {1, 1, 1, 0, 0};
-  int leftCorner2[] = {1, 1, 0, 0, 0};
-
-  int cases[] = {leftWall, leftCorner1, leftCorner2};
-  
-  for (int i = 0; i <= 2; i++) {
-    if (sensorStates == cases[i]) {
-      Serial.print(cases[i]);
-    }
-    Serial.println(leftWall[0]);
+  // turns sensor state array into a string of 0s and 1s
+  String stringy = "";
+  for (int i = 0; i <= 4; i++) {
+    stringy += sensorStates[i];
   }
+
+  // creates an array of case states of 0s and 1s and corresponding word associated with it
+  const char* wordCases[] = {"Left Wall", "Left Corner", "Left Corner 2", "Left Corner 3", 
+  "Left Corner 4", "Front Wall", "Front Corner 1", "Front Corner 2", "Right Corner 1",
+  "Right Corner 2", "Right Corner 3", "Right Corner 4", "Right Wall"};
+  const char* stateCases[] = {"10000", "11100", "11000", "10100", "01100", "00100", "01010",
+  "01110", "00111", "00011", "00101", "00110", "00001"};
+  
+  String myCase = myStateFunction(stringy, stateCases, wordCases);
+  Serial.println(myCase);
 
 
   //vector
 
 
+}
 
+String myStateFunction(String x, const char* y[], const char* z[]){
+  String result;
+  for (int i = 0; i <= 12; i++) {
+    if (x == y[i]) {
+      result = z[i];
+      return result;
+    }
+  }
 }

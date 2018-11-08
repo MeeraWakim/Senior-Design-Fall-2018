@@ -6,7 +6,7 @@ int In2 = 8;
 int In3 = 7;
 int In4 = 6;
 
-void accelerate() // accelerate from zero to maximum speed
+void accelerate() // accelerate from rest to maximum speed
 {
   for (int i = 0; i < 256; i++)
   {
@@ -15,7 +15,7 @@ void accelerate() // accelerate from zero to maximum speed
     delay(20);
   }
 } 
-void decelerate()  // decelerate from maximum speed to zero
+void decelerate()  // decelerate from maximum speed to rest
 {
   for (int i = 255; i >= 0; --i)
   {
@@ -23,16 +23,6 @@ void decelerate()  // decelerate from maximum speed to zero
     analogWrite(enB, i);
     delay(20);
   } 
-}
-void setup()
-{
-  // All motor control pins are outputs
-  pinMode(EnA, OUTPUT);
-  pinMode(EnB, OUTPUT);
-  pinMode(In1, OUTPUT);
-  pinMode(In2, OUTPUT);
-  pinMode(In3, OUTPUT);
-  pinMode(In4, OUTPUT);
 }
 void goForward()   //run both motors forward simultaneously
 {
@@ -46,12 +36,6 @@ void goForward()   //run both motors forward simultaneously
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000);
-  // now turn off motors
-  digitalWrite(In1, LOW);
-  digitalWrite(In2, LOW);  
-  digitalWrite(In3, LOW);
-  digitalWrite(In4, LOW);
 }
 void goBackward()   //run both motors backward simultaneously
 {
@@ -65,12 +49,6 @@ void goBackward()   //run both motors backward simultaneously
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000);
-  // now turn off motors
-  digitalWrite(In1, LOW);
-  digitalWrite(In2, LOW);  
-  digitalWrite(In3, LOW);
-  digitalWrite(In4, LOW);
 }
 void goLeft()   //run left motor forward and right motor backward
 {
@@ -84,14 +62,9 @@ void goLeft()   //run left motor forward and right motor backward
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000);
-  // now turn off motors
-  digitalWrite(In1, LOW);
-  digitalWrite(In2, LOW);  
-  digitalWrite(In3, LOW);
-  digitalWrite(In4, LOW);
+  delay(2000); //figure out what this delay needs to be to turn 15 degrees
 }
-void goRIGHT()   //run left motor backward and right motor forward
+void goRight()   //run left motor backward and right motor forward
 {
   // reverse left motor
   digitalWrite(In1, LOW);
@@ -103,15 +76,83 @@ void goRIGHT()   //run left motor backward and right motor forward
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000);
-  // turn off motors
+  delay(2000); //figure out what this delay needs to be to turn 15 degrees
+}
+void noGo() //turn off both motors to stop
+{
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);  
   digitalWrite(In3, LOW);
-  digitalWrite(In4, LOW);
+  digitalWrite(In4, LOW); 
 }
+void leftCorner()
+{
+  goBackward();
+  delay(1000);
+  goRight();
+  delay(1000);
+  noGo();
+  checkSurroundings();  
+}
+void rightCorner()
+{
+  goBackward();
+  delay(1000);
+  goLeft();
+  delay(1000);
+  noGo();
+  checkSurroundings();
+}
+void leftWall()
+{
+  goRight();
+  delay(1000);
+  noGo();
+  checkSurroundings();
+}
+void rightWall()
+{
+  goLeft();
+  delay(1000);
+  noGo();
+  checkSurroundings();
+}
+void frontWall()
+{
+  goBackward();
+  delay(1000);
+  noGo();
+  checkDistances();
+  if (leftDistance < rightDistance)
+  {
+    goRight();
+  }
+  else 
+  {
+    goLeft();
+  }
+  delay(1000);
+  noGo();
+  checkSurroundings();     
+}
+void setup()
+{
+  // All motor control pins are outputs
+  pinMode(EnA, OUTPUT);
+  pinMode(EnB, OUTPUT);
+  pinMode(In1, OUTPUT);
+  pinMode(In2, OUTPUT);
+  pinMode(In3, OUTPUT);
+  pinMode(In4, OUTPUT);
+}
+
+
 void loop() //makes cart go zoom zoom
 {
+ if (distance < trigger1){
   goForward();
-  delay(1000);
+ }
+ else {
+  
+ }
 }

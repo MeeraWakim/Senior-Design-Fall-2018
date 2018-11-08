@@ -92,11 +92,12 @@ void loop() {
   }
 
   // creates an array of case states of 0s and 1s and corresponding word associated with it
-  const char* wordCases[] = {"Left Wall", "Left Corner", "Left Corner 2", "Left Corner 3", 
-  "Left Corner 4", "Front Wall", "Front Corner 1", "Front Corner 2", "Right Corner 1",
-  "Right Corner 2", "Right Corner 3", "Right Corner 4", "Right Wall"};
   const char* stateCases[] = {"10000", "11100", "11000", "10100", "01100", "00100", "01010",
   "01110", "00111", "00011", "00101", "00110", "00001"};
+  
+  const char* wordCases[] = {"Left Wall", "Left Corner", "Left Corner", "Left Corner", 
+  "Left Corner", "Front Wall", "Front Corner", "Front Corner", "Right Corner",
+  "Right Corner", "Right Corner", "Right Corner", "Right Wall"};
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
   Serial.println(myCase);

@@ -10,8 +10,8 @@ void accelerate() // accelerate from rest to maximum speed
 {
   for (int i = 0; i < 256; i++)
   {
-    analogWrite(enA, i);
-    analogWrite(enB, i);
+    analogWrite(EnA, i);
+    analogWrite(EnB, i);
     delay(20);
   }
 } 
@@ -19,8 +19,8 @@ void decelerate()  // decelerate from maximum speed to rest
 {
   for (int i = 255; i >= 0; --i)
   {
-    analogWrite(enA, i);
-    analogWrite(enB, i);
+    analogWrite(EnA, i);
+    analogWrite(EnB, i);
     delay(20);
   } 
 }
@@ -62,7 +62,6 @@ void goLeft()   //run left motor forward and right motor backward
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000); //figure out what this delay needs to be to turn 15 degrees
 }
 void goRight()   //run left motor backward and right motor forward
 {
@@ -76,7 +75,6 @@ void goRight()   //run left motor backward and right motor forward
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
   analogWrite(EnB, 200);
-  delay(2000); //figure out what this delay needs to be to turn 15 degrees
 }
 void noGo() //turn off both motors to stop
 {
@@ -87,19 +85,23 @@ void noGo() //turn off both motors to stop
 }
 void leftCorner()
 {
+  goLeft();
+  delay(1000);
   goBackward();
   delay(1000);
   goRight();
-  delay(1000);
+  delay(2000);
   noGo();
   checkSurroundings();  
 }
 void rightCorner()
 {
+  goRight();
+  delay(1000);
   goBackward();
   delay(1000);
   goLeft();
-  delay(1000);
+  delay(2000);
   noGo();
   checkSurroundings();
 }
@@ -149,10 +151,37 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {
- if (distance < trigger1){
-  goForward();
- }
- else {
-  
- }
+  findPerson(); 
+  if (pixyDistance < pixyTrigger)
+  {
+    noGo();
+  }
+  else 
+  {
+    checkSurroundings();
+    if (obstacle = "left corner")
+    {
+      leftCorner();
+    }
+    else if (obstacle = "right corner")
+    {
+      rightCorner();
+    }
+    else if (obstacle = "left wall")
+    {
+      leftWall();
+    }
+    else if (obstacle = "right wall")
+    {
+      rightWall();
+    }
+    else if (obstacle = "front wall")
+    {
+      frontWall();
+    }
+    else
+    {
+      goForward();
+    } 
+  }
 }

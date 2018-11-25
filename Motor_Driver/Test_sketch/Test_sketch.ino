@@ -56,7 +56,32 @@ void goBackward()   //run both motors backward simultaneously
   // set speed out of possible range 0~255
   analogWrite(EnB, 255);
 }
-
+void goLeft()   //run left motor forward and right motor backward
+{
+  // forward left motor
+  digitalWrite(In1, HIGH);
+  digitalWrite(In2, LOW);
+  // set speed out of possible range 0~255
+  analogWrite(EnA, 200);
+  // reverse right motor
+  digitalWrite(In3, LOW);
+  digitalWrite(In4, HIGH);
+  // set speed out of possible range 0~255
+  analogWrite(EnB, 200);
+}
+void goRight()   //run left motor backward and right motor forward
+{
+  // reverse left motor
+  digitalWrite(In1, LOW);
+  digitalWrite(In2, HIGH);
+  // set speed out of possible range 0~255
+  analogWrite(EnA, 200);
+  // forward right motor
+  digitalWrite(In3, HIGH);
+  digitalWrite(In4, LOW);
+  // set speed out of possible range 0~255
+  analogWrite(EnB, 200);
+}
 void setup() {
   // put your setup code here, to run once:
   

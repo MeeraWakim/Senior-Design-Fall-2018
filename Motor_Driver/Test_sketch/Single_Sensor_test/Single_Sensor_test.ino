@@ -53,7 +53,7 @@ boolean checkSurroundings(){
     }
     else 
     {
-      sensor1 = false
+      sensor1 = false;
     }
 
     return sensor1;

@@ -75,6 +75,9 @@ String checkSurroundings()
   
       //saving distance/duration values
       savedDistanceVals[i] = distance;
+
+      
+      
   
       //change 1 val to real distance limit
       if (i == 3) 
@@ -349,7 +352,8 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
-  for (int i = 0; i <= 7; i++) {
+  for (int i = 0; i <= 7; i++) 
+  {
     stringy += sensorStates[i];
   }
 
@@ -366,7 +370,6 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
 
-  //output state from "checkSurroudings"
-  return myCase;
+  //display myCase
   Serial.print(myCase);
 }

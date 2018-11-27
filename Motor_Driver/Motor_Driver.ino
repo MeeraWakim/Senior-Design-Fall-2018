@@ -279,24 +279,24 @@ void rightWall()
   noGo();
 //  checkSurroundings();
 }
-//void frontWall()
-//{
-//  goBackward();
-//  delay(500);
-//  noGo();
-//  checkDistances();
-//  if (leftDistance < rightDistance)
-//  {
-//    goRight();
-//  }
-//  else 
-//  {
-//    goLeft();
-//  }
-//  delay(500);
-//  noGo();
-//  checkSurroundings();     
-//}
+void frontWall()
+{
+  goBackward();
+  delay(500);
+  noGo();
+  checkDistances();
+  if (leftDistance < rightDistance)
+  {
+    goRight();
+  }
+  else 
+  {
+    goLeft();
+  }
+  delay(500);
+  noGo();
+  checkSurroundings();     
+}
 void setup()
 {
   // All motor control pins are outputs
@@ -319,13 +319,13 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {
-  //findPerson(); 
-  //if (pixyDistance < pixyTrigger)
-  //{
-  // noGo();
-  //}
-  //else 
-  //{
+  findPerson(); 
+  if (pixyDistance < pixyTrigger)
+  {
+   noGo();
+  }
+  else 
+  {
   goForward();
   delay(1000);
   noGo();
@@ -348,10 +348,10 @@ void loop() //makes cart go zoom zoom
     {
       rightWall();
     }
-//    else if (myCase = "Front Wall")
-//    {
-//      frontWall();
-//    }
+    else if (myCase = "Front Wall")
+    {
+      frontWall();
+    }
     else if (myCase = "Left Rear Corner")
     {
       leftRearCorner();
@@ -364,5 +364,5 @@ void loop() //makes cart go zoom zoom
     {
       goForward();
     } 
-  //}
+  }
 }

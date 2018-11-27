@@ -126,7 +126,7 @@ void loop() {
 
 String myStateFunction(String x, const char* y[], const char* z[]){
   String result;
-  for (int i = 0; i <= 13; i++) {
+  for (int i = 0; i <= 24; i++) {
     if (x == y[i]) {
       result = z[i];
       return result;

@@ -326,10 +326,6 @@ void loop() //makes cart go zoom zoom
   //}
   //else 
   //{
-  goForward();
-  delay(1000);
-  noGo();
-  delay(500);
   
     checkSurroundings();
     if (myCase = "Left Front Corner")
@@ -354,11 +350,7 @@ void loop() //makes cart go zoom zoom
 //    }
     else if (myCase = "Left Rear Corner")
     {
-      leftRearCorner();
-    }
-    else if (myCase = "Right Rear Corner")
-    {
-      rightRearCorner();
+      goForward();
     }
     else
     {

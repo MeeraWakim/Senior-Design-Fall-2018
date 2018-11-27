@@ -45,7 +45,7 @@ boolean sensor8 = false;
   int savedDistanceVals[] = {0,0,0,0,0,0,0,0};
 
 
-void checkSurroundings()
+String checkSurroundings()
 {
   for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
   {
@@ -70,7 +70,7 @@ void checkSurroundings()
 
     // Prints the distance on the Serial Monitor
     //Serial.print("Distance (cm): ");
-    const char* directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side", "Right Rear Corner", "Back", "Left Rear Corner"};
+    const char* directionWords[] = {"Left Side", "Left Front Corner", "Front", "Right Front Corner", "Right Side", "Right Rear Corner", "Back", "Left Rear Corner"};
     Serial.print(directionWords[i]);
     Serial.print(": ");
     Serial.println(distance);
@@ -114,6 +114,9 @@ void checkSurroundings()
   "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
+
+  //output state from "checkSurroudings"
+  return myCase
 }
 
 //output function for "checkSurroudings"
@@ -313,31 +316,31 @@ void loop() //makes cart go zoom zoom
   else 
   {
     checkSurroundings();
-    if (obstacle = "Left Front Corner")
+    if (myCase = "Left Front Corner")
     {
       leftFrontCorner();
     }
-    else if (obstacle = "Right Front Corner")
+    else if (myCase = "Right Front Corner")
     {
       rightFrontCorner();
     }
-    else if (obstacle = "Left Wall")
+    else if (myCase = "Left Wall")
     {
       leftWall();
     }
-    else if (obstacle = "Right Wall")
+    else if (myCase = "Right Wall")
     {
       rightWall();
     }
-    else if (obstacle = "Front Wall")
+    else if (myCase = "Front Wall")
     {
       frontWall();
     }
-    else if (obstacle = "Left Rear Corner")
+    else if (myCase = "Left Rear Corner")
     {
       leftRearCorner();
     }
-    else if (obstacle = "Right Rear Corner")
+    else if (myCase = "Right Rear Corner")
     {
       rightRearCorner();
     }

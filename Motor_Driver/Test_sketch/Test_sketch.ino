@@ -7,18 +7,20 @@ int EnB = 6;  //left motor speed control: PWM pin on Arduino denoted by "~"
 
 void accelerate() // accelerate from rest to maximum speed
 {
-  for (int i = 75; i < 256; i++)
+  for (int i = 0; i < 151; i++)
   {
     analogWrite(EnA, i);
-    delay(20);
+    analogWrite(EnB, i);
+    delay(100);
   }
 } 
 void decelerate()  // decelerate from maximum speed to rest
 {
-  for (int i = 255; i >= 0; --i)
+  for (int i = 150; i >= 0; --i)
   {
     analogWrite(EnA, i);
-    delay(20);
+    analogWrite(EnB, i);
+    delay(100);
   } 
 }
 
@@ -28,12 +30,12 @@ void goForward()   //run both motors forward simultaneously
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
   // set speed out of possible range 0~255
-  analogWrite(EnA, 255);
+  analogWrite(EnA, 150);
   // forward right motor
   digitalWrite(In3, HIGH);
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
-  analogWrite(EnB, 255);
+  analogWrite(EnB, 150);
 }
   void noGo() //turn off both motors to stop
 {
@@ -49,12 +51,12 @@ void goBackward()   //run both motors backward simultaneously
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
   // set speed out of possible range 0~255
-  analogWrite(EnA, 255);
+  analogWrite(EnA, 150);
   // reverse right motor
   digitalWrite(In3, LOW);
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
-  analogWrite(EnB, 255);
+  analogWrite(EnB, 150);
 }
 void goLeft()   //run left motor forward and right motor backward
 {
@@ -62,12 +64,12 @@ void goLeft()   //run left motor forward and right motor backward
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
   // set speed out of possible range 0~255
-  analogWrite(EnA, 200);
+  analogWrite(EnA, 150);
   // reverse right motor
   digitalWrite(In3, LOW);
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
-  analogWrite(EnB, 200);
+  analogWrite(EnB, 150);
 }
 void goRight()   //run left motor backward and right motor forward
 {
@@ -75,14 +77,15 @@ void goRight()   //run left motor backward and right motor forward
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
   // set speed out of possible range 0~255
-  analogWrite(EnA, 200);
+  analogWrite(EnA, 150);
   // forward right motor
   digitalWrite(In3, HIGH);
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
-  analogWrite(EnB, 200);
+  analogWrite(EnB, 150);
 }
-void setup() {
+void setup() 
+{
   // put your setup code here, to run once:
   
   // All motor control pins are outputs
@@ -94,12 +97,18 @@ void setup() {
   pinMode(EnB, OUTPUT);
 }
 
-void loop() {
+void loop() 
+{
   // put your main code here, to run repeatedly:
   goForward();
   delay(2000);
+  decelerate();
   noGo();
   delay(1000);
+  accelerate();
   goBackward();
   delay(2000);
+  decelerate();
+  noGo();
+  delay(1000);
 }

@@ -1,5 +1,6 @@
+#include <math.h>
 //sets trigger distances
-int smallTrigger = 30;
+int smallTrigger = 20;
 int largeTrigger = 35;
 
 // set universal motor speed out of possible range 0~255 
@@ -46,15 +47,26 @@ boolean sensor5 = false;
 boolean sensor6 = false;
 boolean sensor7 = false;
 boolean sensor8 = false;
-  const int myTrigPins[] = {trig1, trig2, trig3, trig4, trig5, trig6, trig7, trig8};
-  const int myEchoPins[] = {echo1, echo2, echo3, echo4, echo5, echo6, echo7, echo8};
-  int sensorStates[] = {sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sensor7, sensor8};
-  int savedDistanceVals[] = {0,0,0,0,0,0,0,0};
+const int myTrigPins[] = {trig1, trig2, trig3, trig4, trig5, trig6, trig7, trig8};
+const int myEchoPins[] = {echo1, echo2, echo3, echo4, echo5, echo6, echo7, echo8};
+int sensorStates[] = {sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sensor7, sensor8};
+int savedDistanceVals[] = {0,0,0,0,0,0,0,0};
+
+// creates an array of case states of 0s and 1s and corresponding word associated with it
+const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
+"01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
+"00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
+
+const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
+"Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
+"Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
+"Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
+"Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
 
 
 String checkSurroundings()
 {
-for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
+  for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
   {
     //setting pins in this iteration of the loop
     trigPin = myTrigPins[i];
@@ -69,13 +81,18 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
     delayMicroseconds(10);
     digitalWrite(trigPin, LOW);
 
-    Serial.println("started pulse");
     // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = pulseIn(echoPin, HIGH);
-    Serial.println("stopped pulse");
+    duration = pulseIn(echoPin, HIGH, 1764); //1764 is timeout, you can read a range of up to 30 cm
 
-    // Calculating the distance in centimeters
-    distance = duration * 0.034 / 2;
+    if(duration > 0)
+    {
+      // Calculating the distance in centimeters
+      distance = round(duration * 0.034 / 2);
+    } 
+    else
+    {
+      distance = 400; //4 m is the max distance the sensor can read
+    }
 
     //saving distance/duration values
     savedDistanceVals[i] = distance;
@@ -83,11 +100,11 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
     //change 1 val to real distance limit  
     if (savedDistanceVals[i] < smallTrigger) 
     {
-      sensorStates[i] = true;
+      sensorStates[i] = 1;
     }
     else if (savedDistanceVals[i] > smallTrigger) 
     {
-      sensorStates[i] = false;
+      sensorStates[i] = 0;
     }
   }
   
@@ -97,17 +114,6 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   {
     stringy += String(sensorStates[i]);
   }
-
-  // creates an array of case states of 0s and 1s and corresponding word associated with it
-  const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
-  "01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
-  "00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
-  
-  const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
-  "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
-  "Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
-  "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
-  "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
 
@@ -129,7 +135,7 @@ String myStateFunction(String x, const char* y[], const char* z[])
   }
 }
 
-String checkDistances() //if it hits front wall
+String checkDistances()
 {
   for (int i = 0; i = 4; i+4) 
     {
@@ -147,10 +153,17 @@ String checkDistances() //if it hits front wall
       digitalWrite(trigPin, LOW);
   
       // Reads the echoPin, returns the sound wave travel time in microseconds
-      duration = pulseIn(echoPin, HIGH);
-  
-      // Calculating the distance in centimeters
-      distance = duration * 0.034 / 2;
+      duration = pulseIn(echoPin, HIGH, 1764); //1764 us timeout, you can read a range of up to 30 cm
+
+      if(duration > 0)
+      {
+        // Calculating the distance in centimeters
+        distance = round(duration * 0.034 / 2);
+      } 
+      else 
+      {
+        distance = 400; //4 m is the max distance the sensor can read
+      }
   
       //saving distance/duration values
       savedDistanceVals[i] = distance;
@@ -189,20 +202,23 @@ void goForward()   //run both motors forward simultaneously
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
-  // set speed out of possible range 0~255
-  analogWrite(EnA, motorSpeed);
   // forward right motor
   digitalWrite(In3, HIGH);
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
+  analogWrite(EnA, motorSpeed);
+  // set speed out of possible range 0~255
   analogWrite(EnB, motorSpeed);
 }
-  void noGo() //turn off both motors to stop
+
+void noGo() //turn off both motors to stop
 {
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);  
   digitalWrite(In3, LOW);
   digitalWrite(In4, LOW); 
+  analogWrite(EnA, 0);
+  analogWrite(EnB, 0);
 }
 
 void goBackward()   //run both motors backward simultaneously
@@ -210,11 +226,11 @@ void goBackward()   //run both motors backward simultaneously
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
-  // set speed out of possible range 0~255
-  analogWrite(EnA, motorSpeed);
   // reverse right motor
   digitalWrite(In3, LOW);
   digitalWrite(In4, HIGH);
+  // set speed out of possible range 0~255
+  analogWrite(EnA, motorSpeed);
   // set speed out of possible range 0~255
   analogWrite(EnB, motorSpeed);
 }
@@ -223,27 +239,29 @@ void goLeft()   //run left motor forward and right motor backward
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
-  // set speed out of possible range 0~255
-  analogWrite(EnA, motorSpeed);
   // reverse right motor
   digitalWrite(In3, LOW);
   digitalWrite(In4, HIGH);
   // set speed out of possible range 0~255
+  analogWrite(EnA, motorSpeed);
+  // set speed out of possible range 0~255
   analogWrite(EnB, motorSpeed);
 }
+
 void goRight()   //run left motor backward and right motor forward
 {
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
-  // set speed out of possible range 0~255
-  analogWrite(EnA, motorSpeed);
   // forward right motor
   digitalWrite(In3, HIGH);
   digitalWrite(In4, LOW);
   // set speed out of possible range 0~255
+  analogWrite(EnA, motorSpeed);
+  // set speed out of possible range 0~255
   analogWrite(EnB, motorSpeed);
 }
+
 void leftFrontCorner()
 {
   goLeft();
@@ -253,6 +271,7 @@ void leftFrontCorner()
   goRight();
   delay(250); 
 }
+
 void rightFrontCorner()
 {
   goRight();
@@ -262,6 +281,7 @@ void rightFrontCorner()
   goLeft();
   delay(250);
 }
+
 void rightRearCorner()
 {
   goLeft();
@@ -271,6 +291,7 @@ void rightRearCorner()
   goRight();
   delay(250);
 }
+
 void leftRearCorner()
 {
   goRight();
@@ -280,6 +301,7 @@ void leftRearCorner()
   goLeft();
   delay(250);
 }
+
 void leftWall()
 {
   goRight();
@@ -289,6 +311,7 @@ void leftWall()
   goLeft();
   delay(250);
 }
+
 void rightWall()
 {
   goLeft();
@@ -298,6 +321,7 @@ void rightWall()
   goRight();
   delay(250);
 }
+
 void frontWall()
 {
   goBackward();
@@ -314,15 +338,33 @@ void frontWall()
     delay(1000);
   }    
 }
+
+void rearWall()
+{
+  goForward();
+  delay(500);
+  String myCase = checkDistances();
+  if (myCase == "Left Wall")
+  {
+    goRight();
+    delay(1000);
+  }
+  else 
+  {
+    goLeft();
+    delay(1000);
+  }    
+}
+
 void setup()
 {
   // All motor control pins are outputs
-    pinMode(EnA, OUTPUT);
-    pinMode(EnB, OUTPUT);
-    pinMode(In1, OUTPUT);
-    pinMode(In2, OUTPUT);
-    pinMode(In3, OUTPUT);
-    pinMode(In4, OUTPUT);
+  pinMode(EnA, OUTPUT);
+  pinMode(EnB, OUTPUT);
+  pinMode(In1, OUTPUT);
+  pinMode(In2, OUTPUT);
+  pinMode(In3, OUTPUT);
+  pinMode(In4, OUTPUT);
 
   //ultrasonic sensor setup
   for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
@@ -332,7 +374,6 @@ void setup()
   }
   Serial.begin(9600); // Starts the serial communication
 }
-
 
 void loop() //makes cart go zoom zoom
 {  
@@ -357,6 +398,10 @@ void loop() //makes cart go zoom zoom
     {
       frontWall();
     }
+    else if (myCase == "Rear Wall")
+    {
+      rearWall();
+    }
     else if (myCase == "Left Rear Corner")
     {
       leftRearCorner();
@@ -369,5 +414,4 @@ void loop() //makes cart go zoom zoom
     {
       goForward();
     } 
-  Serial.println(myCase);
 }

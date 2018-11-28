@@ -99,14 +99,14 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   }
 
   // creates an array of case states of 0s and 1s and corresponding word associated with it
-  const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
-  "01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
-  "00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
+  const char* stateCases[] = {"10000000", "01000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
+  "01110000", "00010000", "00111000", "00011000", "00101000", "00110000", "00001000", "00000100", "00001110", "00001100", "00000110",
+  "00001010", "00000111", "00000101", "00000010", "00000001", "10000011", "10000001", "10000010", "00000011"};
   
-  const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
-  "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
-  "Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
-  "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
+  const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
+  "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", "Right Front Corner", 
+  "Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner", "Right Rear Corner",
+  "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", "Left Rear Corner", 
   "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
@@ -119,7 +119,7 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
 String myStateFunction(String x, const char* y[], const char* z[])
 {
   String result;
-  for (int i = 0; i <= 23; i++) 
+  for (int i = 0; i <= 27; i++) 
   {
     if (x == y[i]) 
     {

@@ -242,7 +242,7 @@ void leftFrontCorner()
   goBackward();
   delay(1000);
   goRight();
-  delay(250); 
+  delay(500); 
 }
 void rightFrontCorner()
 {
@@ -251,25 +251,17 @@ void rightFrontCorner()
   goBackward();
   delay(1000);
   goLeft();
-  delay(250);
+  delay(500);
 }
 void rightRearCorner()
 {
-  goLeft();
-  delay(500);
   goForward();
   delay(1000);
-  goRight();
-  delay(250);
 }
 void leftRearCorner()
 {
-  goRight();
-  delay(500);
   goForward();
   delay(1000);
-  goLeft();
-  delay(250);
 }
 void leftWall()
 {
@@ -278,7 +270,7 @@ void leftWall()
   goForward();
   delay(1000);
   goLeft();
-  delay(250);
+  delay(500);
 }
 void rightWall()
 {
@@ -287,14 +279,14 @@ void rightWall()
   goForward();
   delay(1000);
   goRight();
-  delay(250);
+  delay(500);
 }
 void frontWall()
 {
   goBackward();
   delay(500);
   goRight();
-  delay(250);
+  delay(500);
 }
 void setup()
 {

@@ -1,7 +1,7 @@
 #include <math.h>
-//sets trigger distances
+//sets trigger distances in cm
 int smallTrigger = 20;
-int largeTrigger = 35;
+int largeTrigger = 40;
 
 // set universal motor speed out of possible range 0~255 
 int motorSpeed = 125;
@@ -53,19 +53,21 @@ int sensorStates[] = {sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sens
 int savedDistanceVals[] = {0,0,0,0,0,0,0,0};
 
 // creates an array of case states of 0s and 1s and corresponding word associated with it
-const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
-"01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
+const char* stateCases[] = {"10000000", "01000000", "11000000", "11100000", "10100000", "01100000", "00100000", "01010000",
+"01110000", "00111000", "00011000", "00101000", "00110000", "00010000", "00001000", "00001110", "00001100", "00000110",
 "00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
 
-const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
+const char* wordCases[] = {"Left Wall", "Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
 "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
-"Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
+"Right Front Corner", "Right Front Corner", "Right Wall", "Right Wall", "Right Rear Corner", "Right Rear Corner",
 "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
 "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
 
 
 String checkSurroundings()
 {
+  Serial.println("checkSurroundings");
+  
   for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
   {
     //setting pins in this iteration of the loop
@@ -82,7 +84,64 @@ String checkSurroundings()
     digitalWrite(trigPin, LOW);
 
     // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = pulseIn(echoPin, HIGH, 1764); //1764 is timeout, you can read a range of up to 30 cm
+    duration = pulseIn(echoPin, HIGH, 1177); //1177 is timeout, you can read a range of up to 20 cm
+
+    if(duration > 0)
+    {
+      // Calculating the distance in centimeters
+      distance = round(duration * 0.034 / 2);
+    } 
+    else
+    {
+      distance = 400; //4 m is the max distance the sensor can read
+    }
+    //saving distance/duration values
+    savedDistanceVals[i] = distance;
+
+    //change 1 val to real distance limit  
+    if (savedDistanceVals[i] <= smallTrigger) 
+    {
+      sensorStates[i] = 1;
+    }
+    else 
+    {
+      sensorStates[i] = 0;
+    }
+  }
+Serial.println("exited first for loop");
+  int sensorStateSum = 0;
+  for (int i = 0; i <= sizeof(sensorStates); i++)
+  {
+    sensorStateSum += sensorStates[i];
+  }
+  String largeCase = "";
+  if (sensorStateSum > 0)
+  {
+    largeCase = checkLargeSurroundings();
+  }
+  return largeCase;
+}
+
+String checkLargeSurroundings()
+{
+  Serial.println("Checking largeSurroundings");
+  for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
+  {
+    //setting pins in this iteration of the loop
+    trigPin = myTrigPins[i];
+    echoPin = myEchoPins[i];
+
+    // Clears the trigPin
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    // Sets the trigPin on HIGH state for 10 micro seconds
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH, 2353); //2353 is timeout, you can read a range of up to 40 cm
 
     if(duration > 0)
     {
@@ -98,26 +157,16 @@ String checkSurroundings()
     savedDistanceVals[i] = distance;
 
     //change 1 val to real distance limit  
-    if (savedDistanceVals[i] < smallTrigger) 
+    if (savedDistanceVals[i] <= largeTrigger) 
     {
       sensorStates[i] = 1;
     }
-    else if (savedDistanceVals[i] > smallTrigger) 
+    else 
     {
       sensorStates[i] = 0;
     }
-  }
-
-  for (int i = 0; i <= sizeof(sensorStates); i++)
-  {
-    int sensorStateSum += sensorStates[i];
-  }
-
-  if (sensorStateSum > 0)
-  {
-    
-  }
-  
+  } 
+Serial.println("Exited for loop");
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
   for (int i = 0; i <= 7; i++) 
@@ -126,16 +175,16 @@ String checkSurroundings()
   }
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
-
-  //output state from "checkSurroudings"
+  
+  //output state from "checkLargeSurroudings"
   return myCase;
 }
 
-//output function for "checkSurroudings"
+//output function for "checkLargeSurroudings"
 String myStateFunction(String x, const char* y[], const char* z[])
 {
   String result;
-  for (int i = 0; i <= 24; i++) 
+  for (int i = 0; i <= sizeof(stateCases); i++) 
   {
     if (x == y[i]) 
     {
@@ -147,7 +196,7 @@ String myStateFunction(String x, const char* y[], const char* z[])
 
 String checkDistances()
 {
-  for (int i = 0; i <= 4; i+4) 
+  for (int i = 0; i <= 4; i = i+4) 
     {
       //setting pins in this iteration of the loop
       trigPin = myTrigPins[i];
@@ -170,15 +219,16 @@ String checkDistances()
       //saving distance/duration values
       savedDistanceVals[i] = distance;
     }
-
+    String result = "";
     if (savedDistanceVals[0]<savedDistanceVals[1])
     {
-      return "Left Wall";
+      result = "Left Wall";
     }
     else
     {
-      return "Right Wall";
+      result = "Right Wall";
     }
+    return result;
 }
       
 void accelerate() // accelerate from rest to maximum speed
@@ -269,7 +319,7 @@ void leftFrontCorner()
   goLeft();
   delay(500);
   goBackward();
-  delay(1000);
+  delay(2000);
   goRight();
   delay(250); 
 }
@@ -279,7 +329,7 @@ void rightFrontCorner()
   goRight();
   delay(500);
   goBackward();
-  delay(1000);
+  delay(2000);
   goLeft();
   delay(250);
 }
@@ -289,7 +339,7 @@ void rightRearCorner()
   goLeft();
   delay(500);
   goForward();
-  delay(1000);
+  delay(2000);
   goRight();
   delay(250);
 }
@@ -299,7 +349,7 @@ void leftRearCorner()
   goRight();
   delay(500);
   goForward();
-  delay(1000);
+  delay(2000);
   goLeft();
   delay(250);
 }
@@ -328,8 +378,11 @@ void frontWall()
 {
   goBackward();
   delay(500);
-  String myCase = checkDistances();
-  if (myCase == "Left Wall")
+  noGo();
+  delay(1000);
+  String myFrontCase = "";
+  myFrontCase = checkDistances();
+  if (myFrontCase == "Left Wall")
   {
     goRight();
     delay(1000);
@@ -345,6 +398,7 @@ void rearWall()
 {
   goForward();
   delay(500);
+  
   String myCase = checkDistances();
   if (myCase == "Left Wall")
   {
@@ -379,7 +433,9 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {  
+  Serial.println("I'm working");
     String myCase = checkSurroundings();
+    Serial.println(myCase);
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();

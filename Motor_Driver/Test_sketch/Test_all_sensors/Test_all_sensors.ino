@@ -15,23 +15,23 @@ int In2 = 8;
 int In3 = 7;
 int In4 = 6;
 
-//Ultrasonic sensor pin definitions
-const int trig1 = 43;
-const int echo1 = 45;
-const int trig2 = 47;
-const int echo2 = 49;
-const int trig3 = 51;
-const int echo3 = 53;
-const int trig4 = 42;
-const int echo4 = 44;
-const int trig5 = 26;
-const int echo5 = 28;
-const int trig6 = 22;
-const int echo6 = 24;
-const int trig7 = 31;
-const int echo7 = 33;
-const int trig8 = 34;
-const int echo8 = 36;
+// ultrasonic sensor pin numbers
+const int trig1 = 30;
+const int echo1 = 31;
+const int trig2 = 32;
+const int echo2 = 33;
+const int trig3 = 34;
+const int echo3 = 35;
+const int trig4 = 36;
+const int echo4 = 37;
+const int trig5 = 22;
+const int echo5 = 24;
+const int trig6 = 40;
+const int echo6 = 41;
+const int trig7 = 42;
+const int echo7 = 43;
+const int trig8 = 44;
+const int echo8 = 45;
 
 //ultrasonic sensor variable initilization
 long duration;
@@ -39,7 +39,7 @@ int distance;
 boolean sensor1 = false;
 boolean sensor2 = false;
 boolean sensor3 = false;
-boolean sensor4 = true;
+boolean sensor4 = false;
 boolean sensor5 = false;
 boolean sensor6 = false;
 boolean sensor7 = false;
@@ -52,54 +52,51 @@ boolean sensor8 = false;
 
 String checkSurroundings()
 {
-    for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
-    {
-      //setting pins in this iteration of the loop
-      trigPin = myTrigPins[i];
-      echoPin = myEchoPins[i];
-  
-      // Clears the trigPin
-      digitalWrite(trigPin, LOW);
-      delayMicroseconds(2);
-  
-      // Sets the trigPin on HIGH state for 10 micro seconds
-      digitalWrite(trigPin, HIGH);
-      delayMicroseconds(10);
-      digitalWrite(trigPin, LOW);
-  
-      // Reads the echoPin, returns the sound wave travel time in microseconds
-      duration = pulseIn(echoPin, HIGH);
-  
-      // Calculating the distance in centimeters
-      distance = duration * 0.034 / 2;
-  
-      //saving distance/duration values
-      savedDistanceVals[i] = distance;
+for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
+  {
+    //setting pins in this iteration of the loop
+    trigPin = myTrigPins[i];
+    echoPin = myEchoPins[i];
 
-      
-      
-  
-      //change 1 val to real distance limit
-      if (i == 3) 
-      {
-        sensorStates[i] = false;
-      }
-      
-      if (savedDistanceVals[i] < smallTrigger and i != 3) 
-      {
-        sensorStates[i] = true;
-      }
-  
-      else if (savedDistanceVals[i] > smallTrigger) 
-      {
-        sensorStates[i] = false;
-      }
+    // Clears the trigPin
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    // Sets the trigPin on HIGH state for 10 micro seconds
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
+
+    // Calculating the distance in centimeters
+    distance = duration * 0.034 / 2;
+
+    // Prints the distance on the Serial Monitor
+    //Serial.print("Distance (cm): ");
+    const char* directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side", "Right Rear Corner", "Back", "Left Rear Corner"};
+
+    //saving distance/duration values
+    savedDistanceVals[i] = distance;
+
+    //change 1 val to real distance limit
+   
+    if (savedDistanceVals[i] < smallTrigger) 
+    {
+      sensorStates[i] = true;
     }
 
+    else if (savedDistanceVals[i] > smallTrigger) 
+    {
+      sensorStates[i] = false;
+    }
+  }
   
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
-  for (int i = 0; i <= 7; i++) {
+  for (int i = 0; i <= 7; i++) 
+  {
     stringy += sensorStates[i];
   }
 
@@ -115,6 +112,7 @@ String checkSurroundings()
   "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
+  Serial.println(myCase);
 
   //output state from "checkSurroudings"
   return myCase;
@@ -308,68 +306,36 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {
-for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
-    {
-      //setting pins in this iteration of the loop
-      trigPin = myTrigPins[i];
-      echoPin = myEchoPins[i];
+//  goForward();
   
-      // Clears the trigPin
-      digitalWrite(trigPin, LOW);
-      delayMicroseconds(2);
-  
-      // Sets the trigPin on HIGH state for 10 micro seconds
-      digitalWrite(trigPin, HIGH);
-      delayMicroseconds(10);
-      digitalWrite(trigPin, LOW);
-  
-      // Reads the echoPin, returns the sound wave travel time in microseconds
-      duration = pulseIn(echoPin, HIGH);
-  
-      // Calculating the distance in centimeters
-      distance = duration * 0.034 / 2;
-  
-      //saving distance/duration values
-      savedDistanceVals[i] = distance;
-  
-      //change 1 val to real distance limit
-      if (i == 3) 
-      {
-        sensorStates[i] = false;
-      }
-      
-      if (savedDistanceVals[i] < smallTrigger and i != 3) 
-      {
-        sensorStates[i] = true;
-      }
-  
-      else if (savedDistanceVals[i] > smallTrigger) 
-      {
-        sensorStates[i] = false;
-      }
-    }
-
-  
-  // turns sensor state array into a string of 0s and 1s
-  String stringy = "";
-  for (int i = 0; i <= 7; i++) 
-  {
-    stringy += sensorStates[i];
-  }
-
-  // creates an array of case states of 0s and 1s and corresponding word associated with it
-  const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
-  "01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
-  "00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
-  
-  const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
-  "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
-  "Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
-  "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
-  "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
-  
-  String myCase = myStateFunction(stringy, stateCases, wordCases);
-
-  //display myCase
-  Serial.print(myCase);
+    checkSurroundings();
+//    if (myCase == "Left Front Corner")
+//    {
+//      leftFrontCorner();
+//    }
+//    else if (myCase == "Right Front Corner")
+//    {
+//      rightFrontCorner();
+//    }
+//    else if (myCase == "Left Wall")
+//    {
+//      leftWall();
+//    }
+//    else if (myCase == "Right Wall")
+//    {
+//      rightWall();
+//    }
+//    else if (myCase == "Left Rear Corner")
+//    {
+//      leftRearCorner();
+//    }
+//    else if (myCase == "Right Rear Corner")
+//    {
+//      rightRearCorner();
+//    }
+//    else
+//    {
+//      goForward();
+//    } 
+//  }
 }

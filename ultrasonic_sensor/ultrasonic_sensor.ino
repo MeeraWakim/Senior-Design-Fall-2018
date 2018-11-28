@@ -1,6 +1,8 @@
 int trigPin = 0;
 int echoPin = 0;
 
+int triggerDistance = 10;
+
 // defines pins numbers
 const int trig1 = 30;
 const int echo1 = 31;
@@ -37,17 +39,18 @@ boolean sensor8 = false;
 
 void setup() 
 {
-  for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++){
+  for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
+  {
     pinMode(myTrigPins[i], OUTPUT);
     pinMode(myEchoPins[i], INPUT);
   }
   Serial.begin(9600); // Starts the serial communication
-
 }
 
-void loop() {
-
-  for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) {
+void loop() 
+{
+  for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
+  {
     //setting pins in this iteration of the loop
     trigPin = myTrigPins[i];
     echoPin = myEchoPins[i];
@@ -79,17 +82,19 @@ void loop() {
 
     //change 1 val to real distance limit
    
-    if (savedDistanceVals[i] < 10) {
+    if (savedDistanceVals[i] < triggerDistance) 
+    {
       sensorStates[i] = true;
     }
 
-    else if (savedDistanceVals[i] > 10) {
+    else if (savedDistanceVals[i] > triggerDistance) 
+    {
       sensorStates[i] = false;
     }
-
   }
 
-  for (int i = 0; i <= 7; i++) {
+  for (int i = 0; i <= 7; i++) 
+  {
     Serial.print(sensorStates[i]);
     if (i == 7) {
       Serial.println();
@@ -98,7 +103,8 @@ void loop() {
   
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
-  for (int i = 0; i <= 7; i++) {
+  for (int i = 0; i <= 7; i++) 
+  {
     stringy += sensorStates[i];
   }
 
@@ -115,14 +121,10 @@ void loop() {
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
   Serial.println(myCase);
-
-
-  //vector
-
-
 }
 
-String myStateFunction(String x, const char* y[], const char* z[]){
+String myStateFunction(String x, const char* y[], const char* z[])
+{
   String result;
   for (int i = 0; i <= 24; i++) {
     if (x == y[i]) {

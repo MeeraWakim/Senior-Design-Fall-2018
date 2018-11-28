@@ -2,22 +2,22 @@ int trigPin = 0;
 int echoPin = 0;
 
 // defines pins numbers
-const int trig1 = 43;
-const int echo1 = 45;
-const int trig2 = 47;
-const int echo2 = 49;
-const int trig3 = 51;
-const int echo3 = 53;
-const int trig4 = 42;
-const int echo4 = 44;
-const int trig5 = 26;
-const int echo5 = 28;
-const int trig6 = 22;
-const int echo6 = 24;
-const int trig7 = 31;
-const int echo7 = 33;
-const int trig8 = 34;
-const int echo8 = 36;
+const int trig1 = 30;
+const int echo1 = 31;
+const int trig2 = 32;
+const int echo2 = 33;
+const int trig3 = 34;
+const int echo3 = 35;
+const int trig4 = 36;
+const int echo4 = 37;
+const int trig5 = 22;
+const int echo5 = 24;
+const int trig6 = 40;
+const int echo6 = 41;
+const int trig7 = 42;
+const int echo7 = 43;
+const int trig8 = 44;
+const int echo8 = 45;
 
 // defines variables
 long duration;
@@ -25,7 +25,7 @@ int distance;
 boolean sensor1 = false;
 boolean sensor2 = false;
 boolean sensor3 = false;
-boolean sensor4 = true;
+boolean sensor4 = false;
 boolean sensor5 = false;
 boolean sensor6 = false;
 boolean sensor7 = false;
@@ -77,11 +77,8 @@ void loop() {
     savedDistanceVals[i] = distance;
 
     //change 1 val to real distance limit
-    if (i == 3) {
-      sensorStates[i] = false;
-    }
-    
-    if (savedDistanceVals[i] < 10 and i != 3) {
+   
+    if (savedDistanceVals[i] < 10) {
       sensorStates[i] = true;
     }
 

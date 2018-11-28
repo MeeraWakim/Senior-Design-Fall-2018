@@ -369,5 +369,4 @@ void loop() //makes cart go zoom zoom
     {
       goForward();
     } 
-  Serial.println(myCase);
 }

@@ -119,7 +119,7 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
 String myStateFunction(String x, const char* y[], const char* z[])
 {
   String result;
-  for (int i = 0; i <= 24; i++) 
+  for (int i = 0; i <= 23; i++) 
   {
     if (x == y[i]) 
     {

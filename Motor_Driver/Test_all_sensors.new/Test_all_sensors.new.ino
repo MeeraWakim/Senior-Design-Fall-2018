@@ -107,6 +107,16 @@ String checkSurroundings()
       sensorStates[i] = 0;
     }
   }
+
+  for (int i = 0; i <= sizeof(sensorStates); i++)
+  {
+    int sensorStateSum += sensorStates[i];
+  }
+
+  if (sensorStateSum > 0)
+  {
+    
+  }
   
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
@@ -137,7 +147,7 @@ String myStateFunction(String x, const char* y[], const char* z[])
 
 String checkDistances()
 {
-  for (int i = 0; i = 4; i+4) 
+  for (int i = 0; i <= 4; i+4) 
     {
       //setting pins in this iteration of the loop
       trigPin = myTrigPins[i];
@@ -153,17 +163,9 @@ String checkDistances()
       digitalWrite(trigPin, LOW);
   
       // Reads the echoPin, returns the sound wave travel time in microseconds
-      duration = pulseIn(echoPin, HIGH, 1764); //1764 us timeout, you can read a range of up to 30 cm
+      duration = pulseIn(echoPin, HIGH);
 
-      if(duration > 0)
-      {
-        // Calculating the distance in centimeters
-        distance = round(duration * 0.034 / 2);
-      } 
-      else 
-      {
-        distance = 400; //4 m is the max distance the sensor can read
-      }
+      distance = round(duration * 0.034 / 2);
   
       //saving distance/duration values
       savedDistanceVals[i] = distance;

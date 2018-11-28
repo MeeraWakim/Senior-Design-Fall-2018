@@ -73,14 +73,11 @@ String checkSurroundings()
       // Calculating the distance in centimeters
       distance = duration * 0.034 / 2;
   
-      // Prints the distance on the Serial Monitor
-      //Serial.print("Distance (cm): ");
-      const char* directionWords[] = {"Left Side", "Left Corner", "Front", "Right Corner", "Right Side", "Right Rear Corner", "Back", "Left Rear Corner"};
-      Serial.print(directionWords[i]);
-      Serial.println(distance);
-  
       //saving distance/duration values
       savedDistanceVals[i] = distance;
+
+      
+      
   
       //change 1 val to real distance limit
       if (i == 3) 
@@ -99,14 +96,6 @@ String checkSurroundings()
       }
     }
 
-  for (int i = 0; i <= 7; i++) 
-  {
-    Serial.print(sensorStates[i]);
-    if (i == 7) 
-    {
-      Serial.println();
-    }
-  }
   
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
@@ -279,24 +268,24 @@ void rightWall()
   noGo();
 //  checkSurroundings();
 }
-void frontWall()
-{
-  goBackward();
-  delay(500);
-  noGo();
-  checkDistances();
-  if (leftDistance < rightDistance)
-  {
-    goRight();
-  }
-  else 
-  {
-    goLeft();
-  }
-  delay(500);
-  noGo();
-  checkSurroundings();     
-}
+//void frontWall()
+//{
+//  goBackward();
+//  delay(500);
+//  noGo();
+//  checkDistances();
+//  if (leftDistance < rightDistance)
+//  {
+//    goRight();
+//  }
+//  else 
+//  {
+//    goLeft();
+//  }
+//  delay(500);
+//  noGo();
+//  checkSurroundings();     
+//}
 void setup()
 {
   // All motor control pins are outputs
@@ -319,50 +308,68 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {
-  findPerson(); 
-  if (pixyDistance < pixyTrigger)
-  {
-   noGo();
-  }
-  else 
-  {
-  goForward();
-  delay(1000);
-  noGo();
-  delay(500);
+for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
+    {
+      //setting pins in this iteration of the loop
+      trigPin = myTrigPins[i];
+      echoPin = myEchoPins[i];
   
-    checkSurroundings();
-    if (myCase = "Left Front Corner")
-    {
-      leftFrontCorner();
+      // Clears the trigPin
+      digitalWrite(trigPin, LOW);
+      delayMicroseconds(2);
+  
+      // Sets the trigPin on HIGH state for 10 micro seconds
+      digitalWrite(trigPin, HIGH);
+      delayMicroseconds(10);
+      digitalWrite(trigPin, LOW);
+  
+      // Reads the echoPin, returns the sound wave travel time in microseconds
+      duration = pulseIn(echoPin, HIGH);
+  
+      // Calculating the distance in centimeters
+      distance = duration * 0.034 / 2;
+  
+      //saving distance/duration values
+      savedDistanceVals[i] = distance;
+  
+      //change 1 val to real distance limit
+      if (i == 3) 
+      {
+        sensorStates[i] = false;
+      }
+      
+      if (savedDistanceVals[i] < smallTrigger and i != 3) 
+      {
+        sensorStates[i] = true;
+      }
+  
+      else if (savedDistanceVals[i] > smallTrigger) 
+      {
+        sensorStates[i] = false;
+      }
     }
-    else if (myCase = "Right Front Corner")
-    {
-      rightFrontCorner();
-    }
-    else if (myCase = "Left Wall")
-    {
-      leftWall();
-    }
-    else if (myCase = "Right Wall")
-    {
-      rightWall();
-    }
-    else if (myCase = "Front Wall")
-    {
-      frontWall();
-    }
-    else if (myCase = "Left Rear Corner")
-    {
-      leftRearCorner();
-    }
-    else if (myCase = "Right Rear Corner")
-    {
-      rightRearCorner();
-    }
-    else
-    {
-      goForward();
-    } 
+
+  
+  // turns sensor state array into a string of 0s and 1s
+  String stringy = "";
+  for (int i = 0; i <= 7; i++) 
+  {
+    stringy += sensorStates[i];
   }
+
+  // creates an array of case states of 0s and 1s and corresponding word associated with it
+  const char* stateCases[] = {"10000000", "11100000", "11000000", "10100000", "01100000", "00100000", "01010000",
+  "01110000", "00111000", "00011000", "00101000", "00110000", "00001000", "00001110", "00001100", "00000110",
+  "00001010", "00000111", "00000101", "00000010", "10000011", "10000001", "10000010", "00000011"};
+  
+  const char* wordCases[] = {"Left Wall", "Left Front Corner", "Left Front Corner", "Left Front Corner", 
+  "Left Front Corner", "Front Wall", "Front Corner", "Front Corner", "Right Front Corner", "Right Front Corner", 
+  "Right Front Corner", "Right Front Corner", "Right Wall", "Right Rear Corner", "Right Rear Corner",
+  "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", 
+  "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
+  
+  String myCase = myStateFunction(stringy, stateCases, wordCases);
+
+  //display myCase
+  Serial.print(myCase);
 }

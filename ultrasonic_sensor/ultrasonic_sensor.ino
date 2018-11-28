@@ -35,7 +35,8 @@ boolean sensor8 = false;
   int sensorStates[] = {sensor1, sensor2, sensor3, sensor4, sensor5, sensor6, sensor7, sensor8};
   int savedDistanceVals[] = {0,0,0,0,0,0,0,0};
 
-void setup() {
+void setup() 
+{
   for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++){
     pinMode(myTrigPins[i], OUTPUT);
     pinMode(myEchoPins[i], INPUT);

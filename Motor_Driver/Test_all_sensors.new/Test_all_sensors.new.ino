@@ -443,7 +443,6 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {  
-<<<<<<< HEAD
     //pixy stuff
     static int i = 0;
     int j;
@@ -452,8 +451,6 @@ void loop() //makes cart go zoom zoom
     int left, right;
     
     //ultrasonic sensor check
-=======
->>>>>>> 2e37d9a97480ca6fb0c0b39d80ac62c5c00f628b
     String myCase = checkSurroundings();
 
     if (myCase == "Left Front Corner")

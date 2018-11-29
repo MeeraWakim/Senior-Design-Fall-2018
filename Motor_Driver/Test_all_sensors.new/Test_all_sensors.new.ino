@@ -2,6 +2,10 @@
 #include <Pixy2.h>
 #include <PIDLoop.h>
 
+// LED pins
+int ledOn = A1;
+int ledOff = A4;
+
 //pixy initialization
 Pixy2 pixy;
 PIDLoop panLoop(400, 0, 400, true);
@@ -258,6 +262,9 @@ void decelerate()  // decelerate from maximum speed to rest
 }
 void goForward()   //run both motors forward simultaneously
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+  
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -272,6 +279,9 @@ void goForward()   //run both motors forward simultaneously
 
 void noGo() //turn off both motors to stop
 {
+  digitalWrite(ledOn, LOW);
+  digitalWrite(ledOff, HIGH);
+    
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);  
   digitalWrite(In3, LOW);
@@ -282,6 +292,9 @@ void noGo() //turn off both motors to stop
 
 void goBackward()   //run both motors backward simultaneously
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+      
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -295,6 +308,9 @@ void goBackward()   //run both motors backward simultaneously
 }
 void goLeft()   //run left motor forward and right motor backward
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+      
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -309,6 +325,9 @@ void goLeft()   //run left motor forward and right motor backward
 
 void goRight()   //run left motor backward and right motor forward
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+      
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -416,6 +435,10 @@ void setup()
   pinMode(In3, OUTPUT);
   pinMode(In4, OUTPUT);
 
+  // LED lights are outputs
+  pinMode(ledOn, OUTPUT);
+  pinMode(ledOff, OUTPUT);
+
   //ultrasonic sensor setup
   for(int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   {
@@ -436,7 +459,7 @@ void loop() //makes cart go zoom zoom
     int leftvel, rightvel;
     
     //ultrasonic sensor check
-    /*String myCase = checkSurroundings();
+    String myCase = checkSurroundings();
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();
@@ -469,8 +492,9 @@ void loop() //makes cart go zoom zoom
     {
       rightRearCorner();
     }
-    else {*/
-        pixy.ccc.getBlocks();
+    else {
+        noGo();
+        /* pixy.ccc.getBlocks();
         
         if (pixy.ccc.numBlocks) {
           Serial.println("detected");
@@ -503,7 +527,7 @@ void loop() //makes cart go zoom zoom
         }  
         else // no object detected, go into reset state
         {
-          panLoop.reset();
+          panLoop.reset(); */
           
         }
     //}

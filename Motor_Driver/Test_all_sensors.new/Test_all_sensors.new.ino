@@ -116,9 +116,9 @@ String checkSurroundings()
   }
 
   int sensorStateSum = 0;
-  for (int i = 0; i < sizeof(sensorStates); i++)
+  for (int f = 0; f < sizeof(sensorStates); f++)
   {
-    sensorStateSum += sensorStates[i];
+    sensorStateSum += sensorStates[f];
   }
   String largeCase = "";
   if (sensorStateSum > 0)

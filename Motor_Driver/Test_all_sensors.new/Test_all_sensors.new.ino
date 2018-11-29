@@ -437,7 +437,6 @@ void loop() //makes cart go zoom zoom
     
     //ultrasonic sensor check
     /*String myCase = checkSurroundings();
-
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();
@@ -483,10 +482,24 @@ void loop() //makes cart go zoom zoom
           panLoop.update(panOffset);
 
           // set pan and tilt servos  
-          leftvel = panLoop.m_command;
-          rightvel = -panLoop.m_command;
+          leftvel = panLoop.m_command*0.055+100; //scale pixy output (0-1000) to appropriate motor speed (100-155)
+          rightvel = -panLoop.m_command*0.055+100; //scale pixy output (0-1000) to appropriate motor speed (100-155)
+          
           Serial.println(leftvel);
           Serial.println(rightvel);
+
+          //left motor direction
+          digitalWrite(In1, LOW);
+          digitalWrite(In2, HIGH);
+          // control right motor direction
+          digitalWrite(In3, HIGH);
+          digitalWrite(In4, LOW);
+          // set speed out of possible range 0~255
+          analogWrite(EnA, leftvel);
+          // set speed out of possible range 0~255
+          analogWrite(EnB, rightvel);
+
+          
         }  
         else // no object detected, go into reset state
         {

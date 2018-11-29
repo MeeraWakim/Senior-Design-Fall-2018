@@ -5,6 +5,7 @@
 //pixy initialization
 Pixy2 pixy;
 PIDLoop panLoop(400, 0, 400, true);
+int i=0;
 
 //sets trigger distances in cm
 int smallTrigger = 20;
@@ -115,7 +116,7 @@ String checkSurroundings()
   }
 
   int sensorStateSum = 0;
-  for (int i = 0; i <= sizeof(sensorStates); i++)
+  for (int i = 0; i < sizeof(sensorStates); i++)
   {
     sensorStateSum += sensorStates[i];
   }
@@ -448,10 +449,10 @@ void loop() //makes cart go zoom zoom
     int j;
     char buf[64]; 
     int32_t panOffset;
-    int left, right;
+    int leftvel, rightvel;
     
     //ultrasonic sensor check
-    String myCase = checkSurroundings();
+    /*String myCase = checkSurroundings();
 
     if (myCase == "Left Front Corner")
     {
@@ -485,7 +486,7 @@ void loop() //makes cart go zoom zoom
     {
       rightRearCorner();
     }
-    else {
+    else {*/
         if (pixy.ccc.numBlocks) {
           i++;
           if (i%60==0)
@@ -500,20 +501,13 @@ void loop() //makes cart go zoom zoom
           // set pan and tilt servos  
           leftvel = panLoop.m_command;
           rightvel = -panLoop.m_command;
-
-
-          
-          #if 0 // for debugging
-              sprintf(buf, "%ld %ld %ld %ld", rotateLoop.m_command, translateLoop.m_command, left, right);
-              Serial.println(buf);   
-          #endif
-      
+          Serial.println(leftvel);
+          Serial.println(rightvel);
         }  
         else // no object detected, go into reset state
         {
           panLoop.reset();
-          tiltLoop.reset();
-          pixy.setServos(panLoop.m_command, tiltLoop.m_command);
+          
         }
-    }
+    //}
 }

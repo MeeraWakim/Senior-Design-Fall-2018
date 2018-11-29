@@ -19,22 +19,22 @@ int In3 = 7;
 int In4 = 6;
 
 // ultrasonic sensor pin numbers
-const int trig1 = 30;
-const int echo1 = 31;
+const int trig1 = 44;
+const int echo1 = 45;
 const int trig2 = 32;
 const int echo2 = 33;
-const int trig3 = 34;
-const int echo3 = 35;
-const int trig4 = 36;
-const int echo4 = 37;
+const int trig3 = 30;
+const int echo3 = 31;
+const int trig4 = 34;
+const int echo4 = 35;
 const int trig5 = 22;
-const int echo5 = 24;
-const int trig6 = 40;
-const int echo6 = 41;
+const int echo5 = 23;
+const int trig6 = 38;
+const int echo6 = 39;
 const int trig7 = 42;
 const int echo7 = 43;
-const int trig8 = 44;
-const int echo8 = 45;
+const int trig8 = 28;
+const int echo8 = 29;
 
 //ultrasonic sensor variable initilization
 long duration;
@@ -65,9 +65,7 @@ const char* wordCases[] = {"Left Wall", "Left Wall", "Left Front Corner", "Left 
 
 
 String checkSurroundings()
-{
-  Serial.println("checkSurroundings");
-  
+{  
   for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
   {
     //setting pins in this iteration of the loop
@@ -108,7 +106,7 @@ String checkSurroundings()
       sensorStates[i] = 0;
     }
   }
-Serial.println("exited first for loop");
+
   int sensorStateSum = 0;
   for (int i = 0; i <= sizeof(sensorStates); i++)
   {
@@ -124,7 +122,6 @@ Serial.println("exited first for loop");
 
 String checkLargeSurroundings()
 {
-  Serial.println("Checking largeSurroundings");
   for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++) 
   {
     //setting pins in this iteration of the loop
@@ -166,13 +163,15 @@ String checkLargeSurroundings()
       sensorStates[i] = 0;
     }
   } 
-Serial.println("Exited for loop");
+
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
   for (int i = 0; i <= 7; i++) 
   {
     stringy += String(sensorStates[i]);
   }
+  
+  Serial.println(stringy);
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
   
@@ -397,19 +396,6 @@ void frontWall()
 void rearWall()
 {
   goForward();
-  delay(500);
-  
-  String myCase = checkDistances();
-  if (myCase == "Left Wall")
-  {
-    goRight();
-    delay(1000);
-  }
-  else 
-  {
-    goLeft();
-    delay(1000);
-  }    
 }
 
 void setup()
@@ -433,7 +419,6 @@ void setup()
 
 void loop() //makes cart go zoom zoom
 {  
-  Serial.println("I'm working");
     String myCase = checkSurroundings();
     Serial.println(myCase);
     if (myCase == "Left Front Corner")

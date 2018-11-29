@@ -1,21 +1,18 @@
-// this code just turns on the lights and then off after a delay
-
-int RED_LED = 49;
-int BLUE_LED = 51;
-int GREEN_LED = 53;
+int ledOn = A1; // the pin the LED is connected to
+int ledOff = A4;
 
 void setup() {
-  pinMode(RED_LED, OUTPUT);
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(BLUE_LED, OUTPUT);
+  pinMode(ledOn, OUTPUT); // Declare the LED as an output
+  pinMode(ledOff, OUTPUT);
 }
+
 void loop() {
-  digitalWrite(RED_LED, HIGH);   
-  delay(1000); 
-  digitalWrite(GREEN_LED, HIGH);   
-  delay(1000);   
-  digitalWrite(RED_LED, LOW);   
-  delay(1000); 
-  digitalWrite(GREEN_LED, LOW);   
-  delay(1000);   
+  digitalWrite(ledOn, HIGH); // Turn the LED on
+  delay(2000);
+  digitalWrite(ledOn, LOW);
+  delay(2000);
+  digitalWrite(ledOff, HIGH);
+  delay(2000);
+  digitalWrite(ledOff, LOW);
+  delay(2000);
 }

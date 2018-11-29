@@ -1,4 +1,11 @@
 #include <math.h>
+#include <Pixy2.h>
+#include <PIDLoop.h>
+
+//pixy initialization
+Pixy2 pixy;
+PIDLoop panLoop(400, 0, 400, true);
+
 //sets trigger distances in cm
 int smallTrigger = 20;
 int largeTrigger = 40;
@@ -412,6 +419,22 @@ void rearWall()
   }    
 }
 
+void followPerson(){
+   if (pixy.ccc.numBlocks) {
+    Serial.print("Detected ");
+    Serial.println(pixy.ccc.numBlocks);
+    for (i=0; i<pixy.ccc.numBlocks; i++)
+    {
+      Serial.print("  block ");
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.print(" center of x: ");
+      Serial.println(pixy.ccc.blocks[i].m_x);
+      Serial.print(" width: ");
+     Serial.println(pixy.ccc.blocks[i].m_width);
+   }
+  }  
+}
 void setup()
 {
   // All motor control pins are outputs
@@ -428,14 +451,22 @@ void setup()
     pinMode(myTrigPins[i], OUTPUT);
     pinMode(myEchoPins[i], INPUT);
   }
-  Serial.begin(9600); // Starts the serial communication
+  Serial.begin(115200); // Starts the serial communication
+  pixy.init();
 }
 
 void loop() //makes cart go zoom zoom
 {  
-  Serial.println("I'm working");
+    //pixy stuff
+    static int i = 0;
+    int j;
+    char buf[64]; 
+    int32_t panOffset;
+    int left, right;
+    
+    //ultrasonic sensor check
     String myCase = checkSurroundings();
-    Serial.println(myCase);
+
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();
@@ -468,8 +499,35 @@ void loop() //makes cart go zoom zoom
     {
       rightRearCorner();
     }
-    else
-    {
-      goForward();
-    } 
+    else {
+        if (pixy.ccc.numBlocks) {
+          i++;
+          if (i%60==0)
+            Serial.println(i);   
+          // calculate pan and tilt "errors" with respect to first object (blocks[0]), 
+          // which is the biggest object (they are sorted by size).  
+          panOffset = (int32_t)pixy.frameWidth/2 - (int32_t)pixy.ccc.blocks[0].m_x;
+
+          // update loops
+          panLoop.update(panOffset);
+
+          // set pan and tilt servos  
+          leftvel = panLoop.m_command;
+          rightvel = -panLoop.m_command;
+
+
+          
+          #if 0 // for debugging
+              sprintf(buf, "%ld %ld %ld %ld", rotateLoop.m_command, translateLoop.m_command, left, right);
+              Serial.println(buf);   
+          #endif
+      
+        }  
+        else // no object detected, go into reset state
+        {
+          panLoop.reset();
+          tiltLoop.reset();
+          pixy.setServos(panLoop.m_command, tiltLoop.m_command);
+        }
+    }
 }

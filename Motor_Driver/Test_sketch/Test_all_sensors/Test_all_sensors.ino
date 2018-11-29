@@ -109,6 +109,7 @@ for (int i = 0; i < sizeof(myTrigPins)/sizeof(myTrigPins[0]); i++)
   "Right Rear Corner", "Right Rear Corner", "Rear Corner", "Rear Corner", "Rear Wall", "Left Rear Corner", "Left Rear Corner", 
   "Left Rear Corner", "Left Rear Corner", "Left Rear Corner"};
   
+  
   String myCase = myStateFunction(stringy, stateCases, wordCases);
 
   //output state from "checkSurroudings"
@@ -121,6 +122,11 @@ String myStateFunction(String x, const char* y[], const char* z[])
   String result;
   for (int i = 0; i <= 27; i++) 
   {
+    if (x == "00000000")
+    {
+      noGo();
+      delay (2000);
+    }
     if (x == y[i]) 
     {
       result = z[i];
@@ -131,7 +137,7 @@ String myStateFunction(String x, const char* y[], const char* z[])
 
 String checkDistances() //if it hits front wall
 {
-  for (int i = 0; i = 4; i+4) 
+  for (int i = 0; i < 5; i+4) 
     {
       //setting pins in this iteration of the loop
       trigPin = myTrigPins[i];

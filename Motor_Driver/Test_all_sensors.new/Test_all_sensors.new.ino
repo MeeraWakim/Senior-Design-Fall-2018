@@ -474,11 +474,11 @@ void loop() //makes cart go zoom zoom
         pixy.ccc.getBlocks();
         
         if (pixy.ccc.numBlocks) {
-          Serial.print("detected");
+          Serial.println("detected");
           // calculate pan and tilt "errors" with respect to first object (blocks[0]), 
           // which is the biggest object (they are sorted by size).
           panOffset = (int32_t)pixy.frameWidth/2 - (int32_t)pixy.ccc.blocks[0].m_x;
-         
+          Serial.println(pixy.ccc.blocks[0].m_x);
           // update loops
           panLoop.update(panOffset);
 

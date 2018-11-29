@@ -406,22 +406,6 @@ void rearWall()
   goForward();
 }
 
-void followPerson(){
-   if (pixy.ccc.numBlocks) {
-    Serial.print("Detected ");
-    Serial.println(pixy.ccc.numBlocks);
-    for (i=0; i<pixy.ccc.numBlocks; i++)
-    {
-      Serial.print("  block ");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.print(" center of x: ");
-      Serial.println(pixy.ccc.blocks[i].m_x);
-      Serial.print(" width: ");
-     Serial.println(pixy.ccc.blocks[i].m_width);
-   }
-  }  
-}
 void setup()
 {
   // All motor control pins are outputs
@@ -488,9 +472,7 @@ void loop() //makes cart go zoom zoom
     }
     else {*/
         if (pixy.ccc.numBlocks) {
-          i++;
-          if (i%60==0)
-            Serial.println(i);   
+          Serial.println("Detected");
           // calculate pan and tilt "errors" with respect to first object (blocks[0]), 
           // which is the biggest object (they are sorted by size).  
           panOffset = (int32_t)pixy.frameWidth/2 - (int32_t)pixy.ccc.blocks[0].m_x;

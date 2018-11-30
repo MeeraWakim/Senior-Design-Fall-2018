@@ -1,5 +1,5 @@
 #include <math.h>
-#include <Pixy2.h>
+#include <Pixy2.h> 
 
 //pixy initialization
 Pixy2 pixy;

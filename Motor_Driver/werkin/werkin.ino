@@ -5,6 +5,10 @@
 Pixy2 pixy;
 int i=0;
 
+//LED pins
+int ledOn = 12;
+int ledOff = 13;
+
 //sets trigger distances in cm
 int smallTrigger = 20;
 int largeTrigger = 40;
@@ -177,7 +181,7 @@ String checkLargeSurroundings()
     stringy += String(sensorStates[i]);
   }
 
-  Serial.println(stringy);
+ // Serial.println(stringy);
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
   
@@ -256,6 +260,9 @@ void decelerate()  // decelerate from maximum speed to rest
 }
 void goForward()   //run both motors forward simultaneously
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+  
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -270,6 +277,9 @@ void goForward()   //run both motors forward simultaneously
 
 void noGo() //turn off both motors to stop
 {
+  digitalWrite(ledOn, LOW);
+  digitalWrite(ledOff, HIGH);
+  
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);  
   digitalWrite(In3, LOW);
@@ -280,6 +290,9 @@ void noGo() //turn off both motors to stop
 
 void goBackward()   //run both motors backward simultaneously
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+  
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -293,6 +306,9 @@ void goBackward()   //run both motors backward simultaneously
 }
 void goLeft()   //run left motor forward and right motor backward
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+  
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -307,6 +323,9 @@ void goLeft()   //run left motor forward and right motor backward
 
 void goRight()   //run left motor backward and right motor forward
 {
+  digitalWrite(ledOn, HIGH);
+  digitalWrite(ledOff, LOW);
+  
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -406,6 +425,10 @@ void rearWall()
 
 void setup()
 {
+  //LED pins are output
+  pinMode(ledOn, OUTPUT);
+  pinMode(ledOff, OUTPUT);
+  
   // All motor control pins are outputs
   pinMode(EnA, OUTPUT);
   pinMode(EnB, OUTPUT);
@@ -427,6 +450,7 @@ void setup()
 void loop() //makes cart go zoom zoom
 {  
     //ultrasonic sensor check
+    checkSurroundings();
     String myCase = checkSurroundings();
     Serial.println(myCase);
     Serial.println("started ultrasonic");

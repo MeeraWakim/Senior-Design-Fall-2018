@@ -1,5 +1,5 @@
-int ledOn = A1; // the pin the LED is connected to
-int ledOff = A4;
+int ledOn = A4; // the pin the LED is connected to
+int ledOff = A2;
 
 void setup() {
   pinMode(ledOn, OUTPUT); // Declare the LED as an output
@@ -11,8 +11,8 @@ void loop() {
   delay(2000);
   digitalWrite(ledOn, LOW);
   delay(2000);
-  digitalWrite(ledOff, HIGH);
+ /* analogWrite(ledOff, HIGH);
   delay(2000);
-  digitalWrite(ledOff, LOW);
-  delay(2000);
+  analogWrite(ledOff, LOW);
+  delay(2000); */
 }

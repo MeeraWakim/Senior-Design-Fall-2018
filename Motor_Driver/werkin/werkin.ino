@@ -5,10 +5,6 @@
 Pixy2 pixy;
 int i=0;
 
-//LED pins
-int ledOn = 12;
-int ledOff = 13;
-
 //sets trigger distances in cm
 int smallTrigger = 20;
 int largeTrigger = 40;
@@ -181,7 +177,7 @@ String checkLargeSurroundings()
     stringy += String(sensorStates[i]);
   }
 
- // Serial.println(stringy);
+  Serial.println(stringy);
   
   String myCase = myStateFunction(stringy, stateCases, wordCases);
   
@@ -260,9 +256,6 @@ void decelerate()  // decelerate from maximum speed to rest
 }
 void goForward()   //run both motors forward simultaneously
 {
-  digitalWrite(ledOn, HIGH);
-  digitalWrite(ledOff, LOW);
-  
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -277,9 +270,6 @@ void goForward()   //run both motors forward simultaneously
 
 void noGo() //turn off both motors to stop
 {
-  digitalWrite(ledOn, LOW);
-  digitalWrite(ledOff, HIGH);
-  
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);  
   digitalWrite(In3, LOW);
@@ -290,9 +280,6 @@ void noGo() //turn off both motors to stop
 
 void goBackward()   //run both motors backward simultaneously
 {
-  digitalWrite(ledOn, HIGH);
-  digitalWrite(ledOff, LOW);
-  
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -306,9 +293,6 @@ void goBackward()   //run both motors backward simultaneously
 }
 void goLeft()   //run left motor forward and right motor backward
 {
-  digitalWrite(ledOn, HIGH);
-  digitalWrite(ledOff, LOW);
-  
   // forward left motor
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
@@ -323,9 +307,6 @@ void goLeft()   //run left motor forward and right motor backward
 
 void goRight()   //run left motor backward and right motor forward
 {
-  digitalWrite(ledOn, HIGH);
-  digitalWrite(ledOff, LOW);
-  
   // reverse left motor
   digitalWrite(In1, LOW);
   digitalWrite(In2, HIGH);
@@ -425,10 +406,6 @@ void rearWall()
 
 void setup()
 {
-  //LED pins are output
-  pinMode(ledOn, OUTPUT);
-  pinMode(ledOff, OUTPUT);
-  
   // All motor control pins are outputs
   pinMode(EnA, OUTPUT);
   pinMode(EnB, OUTPUT);
@@ -448,11 +425,45 @@ void setup()
 }
 
 void loop() //makes cart go zoom zoom
-{  
-    //ultrasonic sensor check
-    checkSurroundings();
+{
     String myCase = checkSurroundings();
-    Serial.println(myCase);
+
+    while (myCase == "" ) {
+      String myCase = checkSurroundings();
+    //follow the person
+     Serial.println("started pixy");
+     //obtain pixy data
+     pixy.ccc.getBlocks();
+      
+     //don't move if the person is within 2 feet of the cart   
+      
+     if (pixy.ccc.blocks[0].m_width>100)
+       {
+         decelerate();
+         noGo();
+       }
+      else
+       {
+         //if the person is in the left third of the field of vision, move left
+         if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3)
+         {
+           goLeft();
+           delay(175);
+         }
+         
+         //if the person is in the right third of the field of vision, move right
+         else if((int32_t)pixy.ccc.blocks[0].m_x>(int32_t)pixy.frameWidth*2/3)
+         {
+           goRight();
+           delay(175);
+         }
+         else //if (pixy.ccc.blocks[0].m_width<100 || pixy.ccc.blocks[0].m_width>315);
+         {
+           goForward();
+         }
+       }
+
+    }
 
     if (myCase == "Left Front Corner")
     {
@@ -488,33 +499,6 @@ void loop() //makes cart go zoom zoom
     }
     else
     {
-
-    int8_t errorValue = pixy.ccc.getBlocks(False, 255, 255);
-    if(errorValue < 0){
-        Serial.println("Big ol' error after calling getBlocks");
-        delay(1000);
-        return;
-    }
-    uint16_t frameWidth = pixy.frameWidth;
-
-    if(pixy.ccc.numBlocks == 0){
-        goForward();
-    } else {
-        pixy.ccc.Block *blockData = pixy.ccc.blocks;
-        if((float)blockData[0].m_x < frameWidth*0.33){ //Make them floats, not integers
-            goLeft();
-            delay(175);
-        }
-        else if((float)blockData[0].m_x > frameWidth*(0.67)){ //Make them floats, not integers
-            goRight();
-            delay(175);
-        }
-        else if(blockData[0].m_width < 100 && pixy.ccc.blocks[0].m_width > 315){ //I flipped the greater than/less than signs
-            goForward();
-        }
+      goForward();
     }
 }
-}
-
-
-

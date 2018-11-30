@@ -429,7 +429,7 @@ void loop() //makes cart go zoom zoom
     //ultrasonic sensor check
     String myCase = checkSurroundings();
     Serial.println(myCase);
-    
+    Serial.println("started ultrasonic");
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();
@@ -465,25 +465,18 @@ void loop() //makes cart go zoom zoom
     else 
     {
     //follow the person
-    
-     //obtain pixy data
-     pixy.ccc.getBlocks();
-
-     int numBlocks = pixy.ccc.getBlocks();
-
-     if (numBlocks == 0)
-     { 
-      goForward();
-     }
-
-      //don't move if the person is within 2 feet of the cart   
+    Serial.println("started pixy");
+    //obtain pixy data
+    pixy.ccc.getBlocks(false);
      
-     else if (pixy.ccc.blocks[0].m_width>100 and pixy.ccc.blocks[0].m_width<315)
+    //don't move if the person is within 2 feet of the cart   
+     
+    if (pixy.ccc.blocks[0].m_width>100)
       {
         decelerate();
         noGo();
       }
-      else
+     else
       {
         //if the person is in the left third of the field of vision, move left
         if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3)
@@ -502,6 +495,8 @@ void loop() //makes cart go zoom zoom
         {
           goForward();
         }
-      } 
+      }
+       Serial.println("ended pixy");
+       goForward();
     }
 }

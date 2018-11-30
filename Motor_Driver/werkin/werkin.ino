@@ -425,11 +425,10 @@ void setup()
 }
 
 void loop() //makes cart go zoom zoom
-{  
-    //ultrasonic sensor check
+{
     String myCase = checkSurroundings();
     Serial.println(myCase);
-    Serial.println("started ultrasonic");
+
     if (myCase == "Left Front Corner")
     {
       leftFrontCorner();
@@ -462,41 +461,35 @@ void loop() //makes cart go zoom zoom
     {
       rightRearCorner();
     }
-    else 
+    else
     {
-    //follow the person
-    Serial.println("started pixy");
-    //obtain pixy data
-    pixy.ccc.getBlocks(false);
-     
-    //don't move if the person is within 2 feet of the cart   
-     
-    if (pixy.ccc.blocks[0].m_width>100)
-      {
-        decelerate();
-        noGo();
-      }
-     else
-      {
-        //if the person is in the left third of the field of vision, move left
-        if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3)
-        {
-          goLeft();
-          delay(175);
+
+    int8_t errorValue = pixy.ccc.getBlocks(False, 255, 255);
+    if(errorValue < 0){
+        Serial.println("Big ol' error after calling getBlocks");
+        delay(1000);
+        return;
+    }
+    uint16_t frameWidth = pixy.frameWidth;
+
+    if(pixy.ccc.numBlocks == 0){
+        goForward();
+    } else {
+        pixy.ccc.Block *blockData = pixy.ccc.blocks;
+        if((float)blockData[0].m_x < frameWidth*0.33){ //Make them floats, not integers
+            goLeft();
+            delay(175);
         }
-        
-        //if the person is in the right third of the field of vision, move right
-        else if((int32_t)pixy.ccc.blocks[0].m_x>(int32_t)pixy.frameWidth*2/3)
-        {
-          goRight();
-          delay(175);
+        else if((float)blockData[0].m_x > frameWidth*(0.67)){ //Make them floats, not integers
+            goRight();
+            delay(175);
         }
-        else if (pixy.ccc.blocks[0].m_width<100 and pixy.ccc.blocks[0].m_width>315);
-        {
-          goForward();
+        else if(blockData[0].m_width < 100 && pixy.ccc.blocks[0].m_width > 315){ //I flipped the greater than/less than signs
+            goForward();
         }
-      }
-       Serial.println("ended pixy");
-       goForward();
     }
 }
+}
+
+
+

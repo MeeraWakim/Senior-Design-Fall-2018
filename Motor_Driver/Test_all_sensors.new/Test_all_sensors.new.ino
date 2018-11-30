@@ -472,7 +472,8 @@ void loop() //makes cart go zoom zoom
     else {*/
         pixy.ccc.getBlocks();
         
-        if (pixy.ccc.numBlocks) {
+        if (pixy.ccc.numBlocks) 
+        {
           Serial.println("detected");
           // calculate pan and tilt "errors" with respect to first object (blocks[0]), 
           // which is the biggest object (they are sorted by size).
@@ -482,22 +483,23 @@ void loop() //makes cart go zoom zoom
           panLoop.update(panOffset);
 
           // set pan and tilt servos  
-          leftvel = panLoop.m_command*0.055+100; //scale pixy output (0-1000) to appropriate motor speed (100-155)
-          rightvel = -panLoop.m_command*0.055+100; //scale pixy output (0-1000) to appropriate motor speed (100-155)
+          leftSpeed = round(panLoop.m_command*0.025+125); //scale pixy output (0-1000) to appropriate motor speed (100-155) with median of 125
+          rightSpeed = round(-panLoop.m_command*0.025+125); //scale pixy output (0-1000) to appropriate motor speed (100-155) with median of 125
           
-          Serial.println(leftvel);
-          Serial.println(rightvel);
+          Serial.println(leftSpeed);
+          Serial.println(rightSpeed);
 
-          //left motor direction
-          digitalWrite(In1, LOW);
-          digitalWrite(In2, HIGH);
-          // control right motor direction
+
+          //left motor forward
+          digitalWrite(In1, HIGH);
+          digitalWrite(In2, LOW);
+          //right motor forward
           digitalWrite(In3, HIGH);
           digitalWrite(In4, LOW);
           // set speed out of possible range 0~255
-          analogWrite(EnA, leftvel);
+          analogWrite(EnA, leftSpeed);
           // set speed out of possible range 0~255
-          analogWrite(EnB, rightvel);
+          analogWrite(EnB, rightSpeed);
 
           
         }  

@@ -422,87 +422,140 @@ void setup()
   }
   Serial.begin(115200); // Starts the serial communication
   pixy.init();
+  
 }
 
 void loop() //makes cart go zoom zoom
 {
-    String myCase = checkSurroundings();
-    Serial.print("myCase (outside of while loop): ");
-    Serial.println(myCase);
-    
-    while (myCase == "" ) {
-      String myCase = checkSurroundings();
-      Serial.print("myCase (inside of while loop): ");
-      Serial.println(myCase);
       //follow the person
-      Serial.println("starting getblocks");
       //obtain pixy data
-      pixy.ccc.getBlocks();
-      Serial.println("ending getblocks");
+      pixy.ccc.getBlocks();//WHILE LOOP FOR WHEN IT SEES THE FANNY PACK?
       //don't move if the person is within 2 feet of the cart   
       if (pixy.ccc.blocks[0].m_width>100) {
-      Serial.println("nogo");
          decelerate();
          noGo();
        }
       else {
          //if the person is in the left third of the field of vision, move left
-         if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3)
-         {
-           Serial.println("lefttt");
-           goLeft();
-           delay(175);
-         }
+         if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3) {
+              String myCase = checkSurroundings();
+              if (myCase == "Left Front Corner")
+              {
+                leftFrontCorner();
+              }
+              else if (myCase == "Right Front Corner")
+              {
+                rightFrontCorner();
+              }
+              else if (myCase == "Left Wall")
+              {
+                leftWall();
+              }
+              else if (myCase == "Right Wall")
+              {
+                rightWall();
+              }
+              else if (myCase == "Front Wall")
+              {
+                frontWall();
+              }
+              else if (myCase == "Rear Wall")
+              {
+                rearWall();
+              }
+              else if (myCase == "Left Rear Corner")
+              {
+                leftRearCorner();
+              }
+              else if (myCase == "Right Rear Corner")
+              {
+                rightRearCorner();
+              }
+              else {
+                goLeft();
+                delay(175);
+              }
+            }
          
          //if the person is in the right third of the field of vision, move right
          else if((int32_t)pixy.ccc.blocks[0].m_x>(int32_t)pixy.frameWidth*2/3)
          {
-           Serial.println("rightttt");
-           goRight();
+          String myCase = checkSurroundings();
+               if (myCase == "Left Front Corner")
+              {
+                leftFrontCorner();
+              }
+              else if (myCase == "Right Front Corner")
+              {
+                rightFrontCorner();
+              }
+              else if (myCase == "Left Wall")
+              {
+                leftWall();
+              }
+              else if (myCase == "Right Wall")
+              {
+                rightWall();
+              }
+              else if (myCase == "Front Wall")
+              {
+                frontWall();
+              }
+              else if (myCase == "Rear Wall")
+              {
+                rearWall();
+              }
+              else if (myCase == "Left Rear Corner")
+              {
+                leftRearCorner();
+              }
+              else if (myCase == "Right Rear Corner")
+              {
+                rightRearCorner();
+              }
+              else {
+                  goRight();
            delay(175);
+              }
          }
          else //if (pixy.ccc.blocks[0].m_width<100 || pixy.ccc.blocks[0].m_width>315);
          {
-           Serial.println("forward");
-           goForward();
+          String myCase = checkSurroundings();
+              if (myCase == "Left Front Corner")
+              {
+                leftFrontCorner();
+              }
+              else if (myCase == "Right Front Corner")
+              {
+                rightFrontCorner();
+              }
+              else if (myCase == "Left Wall")
+              {
+                leftWall();
+              }
+              else if (myCase == "Right Wall")
+              {
+                rightWall();
+              }
+              else if (myCase == "Front Wall")
+              {
+                frontWall();
+              }
+              else if (myCase == "Rear Wall")
+              {
+                rearWall();
+              }
+              else if (myCase == "Left Rear Corner")
+              {
+                leftRearCorner();
+              }
+              else if (myCase == "Right Rear Corner")
+              {
+                rightRearCorner();
+              }
+              else {
+                goForward();
+              }
          }
-       }
-
-    }
-
-    if (myCase == "Left Front Corner")
-    {
-      leftFrontCorner();
-    }
-    else if (myCase == "Right Front Corner")
-    {
-      rightFrontCorner();
-    }
-    else if (myCase == "Left Wall")
-    {
-      leftWall();
-    }
-    else if (myCase == "Right Wall")
-    {
-      rightWall();
-    }
-    else if (myCase == "Front Wall")
-    {
-      frontWall();
-    }
-    else if (myCase == "Rear Wall")
-    {
-      rearWall();
-    }
-    else if (myCase == "Left Rear Corner")
-    {
-      leftRearCorner();
-    }
-    else if (myCase == "Right Rear Corner")
-    {
-      rightRearCorner();
-    }
-    else {
-      Serial.println("fell out of else");
-    }
+      }
 }

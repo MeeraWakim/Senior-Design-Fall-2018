@@ -1,4 +1,4 @@
-int ledOn = A4; // the pin the LED is connected to
+int ledOn = 3; // the pin the LED is connected to
 int ledOff = A2;
 
 void setup() {

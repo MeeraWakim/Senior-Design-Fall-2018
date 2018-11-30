@@ -172,7 +172,7 @@ String checkLargeSurroundings()
 
   // turns sensor state array into a string of 0s and 1s
   String stringy = "";
-  for (int i = 0; i <= 7; i++) 
+  for (int i = 0; i < 8; i++) 
   {
     stringy += String(sensorStates[i]);
   }
@@ -189,7 +189,7 @@ String checkLargeSurroundings()
 String myStateFunction(String x, const char* y[], const char* z[])
 {
   String result;
-  for (int i = 0; i < sizeof(stateCases); i++) 
+  for (int i = 0; i < 26; i++) 
   {
     if (x == y[i]) 
     {
@@ -464,45 +464,44 @@ void loop() //makes cart go zoom zoom
     }
     else 
     {
-      goForward();
-    }
-    /*
-    }
-    else 
-    {
-      //follow the person
+    //follow the person
+    
+     //obtain pixy data
+     pixy.ccc.getBlocks();
 
-      //obtain pixy data
-      pixy.ccc.getBlocks();
+     int numBlocks = pixy.ccc.getBlocks();
+
+     if (numBlocks == 0)
+     { 
+      goForward();
+     }
 
       //don't move if the person is within 2 feet of the cart   
-      if (pixy.ccc.blocks[0].m_width>100)
+     
+     else if (pixy.ccc.blocks[0].m_width>100 and pixy.ccc.blocks[0].m_width<315)
       {
         decelerate();
         noGo();
       }
       else
       {
-        //if the person is in the right third of the field of vision, move left
+        //if the person is in the left third of the field of vision, move left
         if((int32_t)pixy.ccc.blocks[0].m_x<(int32_t)pixy.frameWidth/3)
         {
           goLeft();
           delay(175);
         }
         
-        //if the person is in the left third of the field of vision, move right
+        //if the person is in the right third of the field of vision, move right
         else if((int32_t)pixy.ccc.blocks[0].m_x>(int32_t)pixy.frameWidth*2/3)
         {
           goRight();
           delay(175);
         }
-        else 
+        else if (pixy.ccc.blocks[0].m_width<100 and pixy.ccc.blocks[0].m_width>315);
         {
           goForward();
         }
-      }
+      } 
     }
-    */
 }
-
-
